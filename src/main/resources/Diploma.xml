@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<Schema name="Diploma">
+    <Cube name="Diplomas">
+        <Table name="diploma_facts"/>
+        <Dimension name="Students" foreignKey="id_student">
+            <Hierarchy hasAll="true" allMemberName="All" primaryKey="id_student">
+                <Table name="students"/>
+                <Level name="Faculty" column="faculty" uniqueMembers="false"/>
+                <Level name="Specialization" column="specialization" uniqueMembers="false"/>
+                <Level name="Group" column="group_number" uniqueMembers="false"/>
+                <Level name="Name" column="name" uniqueMembers="true"/>
+            </Hierarchy>
+        </Dimension>
+        <Dimension name="Teachers" foreignKey="id_teacher">
+            <Hierarchy hasAll="true" allMemberName="All" primaryKey="id_teacher">
+                <Table name="teachers"/>
+                <Level name="Specialization" column="specialization" uniqueMembers="true"/>
+                <Level name="Name" column="name" uniqueMembers="true"/>
+            </Hierarchy>
+        </Dimension>
+        <Measure name="Mark" column="mark" aggregator="avg"/>
+        <Measure name="Percentage" column="percentage" aggregator="avg"/>
+    </Cube>
+</Schema>
+
