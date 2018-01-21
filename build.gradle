@@ -46,7 +46,7 @@ dependencies {
 			'org.apache.commons:commons-math3:3.6.1',
 
 			'mysql:mysql-connector-java:5.1.40',
-
+			'org.pivot4j:pivot4j-core:0.9'
 	)
 
 	runtime('org.springframework.boot:spring-boot-devtools')
