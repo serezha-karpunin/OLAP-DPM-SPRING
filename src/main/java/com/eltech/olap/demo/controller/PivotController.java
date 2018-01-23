@@ -1,6 +1,7 @@
 package com.eltech.olap.demo.controller;
 
 import com.eltech.olap.demo.domain.Table;
+import com.eltech.olap.demo.pivot.CustomPivotModel;
 import com.eltech.olap.demo.service.PivotModelService;
 import org.pivot4j.PivotModel;
 import org.pivot4j.datasource.SimpleOlapDataSource;
@@ -16,19 +17,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Serializable;
 
 @CrossOrigin("*")
 @Controller
 public class PivotController {
 
-    // TODO: 21.01.2018 add saving model state to session
-//    private final String PIVOT_STATE_ATTRIBUTE_NAME = "pivotState";
+    private final String PIVOT_STATE_ATTRIBUTE_NAME = "pivotState";
 
     private final PivotModelService pivotModelService;
 
+    // TODO: 23.01.2018 get rid of this field
     @Autowired
     private SimpleOlapDataSource simpleOlapDataSource;
 
@@ -38,8 +41,13 @@ public class PivotController {
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/mdx")
-    public ResponseEntity<Table> getQueryResult(@RequestParam(value = "query") String mdxQuery) {
-        return new ResponseEntity<>(pivotModelService.getQueryResult(mdxQuery), HttpStatus.OK);
+    public ResponseEntity<Table> getQueryResult(@RequestParam(value = "query") String mdxQuery, HttpServletRequest request) {
+        Serializable bookmark = (Serializable) request.getSession().getAttribute(PIVOT_STATE_ATTRIBUTE_NAME);
+
+        CustomPivotModel customPivotModel = pivotModelService.executeMdxQuery(bookmark, mdxQuery);
+
+        request.getSession().setAttribute(PIVOT_STATE_ATTRIBUTE_NAME, customPivotModel.saveState());
+        return new ResponseEntity<>(customPivotModel.getTable(), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/mdx2")
