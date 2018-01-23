@@ -74,6 +74,8 @@ public class ObjectMappingRenderCallback
 //        getRenderPropertyUtils();
 
         cell.setType(context.getCellType());
+        cell.setColSpan(context.getColumnSpan());
+        cell.setRowSpan(context.getRowSpan());
 //        cell.setPadding(context.getMember().getDepth());
     }
 

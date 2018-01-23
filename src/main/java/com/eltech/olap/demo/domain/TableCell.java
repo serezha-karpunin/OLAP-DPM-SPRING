@@ -6,6 +6,26 @@ public class TableCell {
     private Double value;
     private String label;
 
+    private int colSpan;
+
+    public int getColSpan() {
+        return colSpan;
+    }
+
+    public void setColSpan(int colSpan) {
+        this.colSpan = colSpan;
+    }
+
+    public int getRowSpan() {
+        return rowSpan;
+    }
+
+    public void setRowSpan(int rowSpan) {
+        this.rowSpan = rowSpan;
+    }
+
+    private int rowSpan;
+
     public void setType(String type) {
         this.type = type;
     }
