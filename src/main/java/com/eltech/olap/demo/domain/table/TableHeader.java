@@ -1,9 +1,8 @@
-package com.eltech.olap.demo.domain;
+package com.eltech.olap.demo.domain.table;
 
 import java.util.List;
 
-public class TableBody {
-
+public class TableHeader {
     private List<TableRow> rows;
 
     public List<TableRow> getRows() {

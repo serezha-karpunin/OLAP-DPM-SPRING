@@ -1,8 +1,9 @@
-package com.eltech.olap.demo.domain;
+package com.eltech.olap.demo.domain.table;
 
 import java.util.List;
 
-public class TableHeader {
+public class TableBody {
+
     private List<TableRow> rows;
 
     public List<TableRow> getRows() {
@@ -12,5 +13,4 @@ public class TableHeader {
     public void setRows(List<TableRow> rows) {
         this.rows = rows;
     }
-
 }

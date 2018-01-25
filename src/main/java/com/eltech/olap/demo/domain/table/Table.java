@@ -1,4 +1,4 @@
-package com.eltech.olap.demo.domain;
+package com.eltech.olap.demo.domain.table;
 
 public class Table {
     private TableHeader header;
