@@ -81,7 +81,7 @@ public class ObjectMappingRenderCallback
 
     @Override
     public void endCell(TableRenderContext context) {
-        if(row.getCells() == null) {
+        if (row.getCells() == null) {
             row.setCells(new ArrayList<>());
         }
         row.getCells().add(cell);
@@ -108,12 +108,19 @@ public class ObjectMappingRenderCallback
 
     @Override
     public void renderCommands(TableRenderContext context, List<UICommand<?>> commands) {
-       /* for (UICommand<?> command : commands) {
-            UICommandParameters parameters = command.createParameters(context);
+        List<Command> commandList = new ArrayList<>();
 
-            DpmCommandButton button = new DpmCommandButton();
-            button.setTitle(command.getDescription());
-        }*/
+        for (UICommand<?> uiCommand : commands) {
+            Command command = new Command();
+            command.setName(uiCommand.getName());
+            command.setDescription(uiCommand.getDescription());
+            command.setMode(uiCommand.getMode(context));
+            command.setParameters(uiCommand.createParameters(context));
+
+            commandList.add(command);
+        }
+
+        cell.setCommands(commandList);
     }
 
     @Override

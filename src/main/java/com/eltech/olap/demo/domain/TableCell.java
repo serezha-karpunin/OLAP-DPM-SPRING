@@ -1,5 +1,7 @@
 package com.eltech.olap.demo.domain;
 
+import java.util.List;
+
 public class TableCell {
     private String type;
     private int padding;
@@ -7,6 +9,16 @@ public class TableCell {
     private String label;
 
     private int colSpan;
+
+    private List<Command> commands;
+
+    public List<Command> getCommands() {
+        return commands;
+    }
+
+    public void setCommands(List<Command> commands) {
+        this.commands = commands;
+    }
 
     public int getColSpan() {
         return colSpan;
