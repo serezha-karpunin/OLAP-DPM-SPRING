@@ -1,6 +1,7 @@
 package com.eltech.olap.demo.callback;
 
 import com.eltech.olap.demo.domain.*;
+import com.eltech.olap.demo.domain.table.*;
 import org.pivot4j.ui.AbstractRenderCallback;
 import org.pivot4j.ui.command.UICommand;
 import org.pivot4j.ui.table.TableRenderCallback;
@@ -8,7 +9,6 @@ import org.pivot4j.ui.table.TableRenderContext;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class ObjectMappingRenderCallback
         extends AbstractRenderCallback<TableRenderContext>
@@ -19,17 +19,14 @@ public class ObjectMappingRenderCallback
     private TableBody body;
     private TableRow row;
     private TableCell cell;
-    private DpmColumn column;
 
     public Table getTable() {
         return table;
     }
 
-
     @Override
     public void startTable(TableRenderContext context) {
         table = new Table();
-        context.getAxis();
     }
 
     @Override
@@ -48,7 +45,6 @@ public class ObjectMappingRenderCallback
     public void startBody(TableRenderContext context) {
         body = new TableBody();
         body.setRows(new ArrayList<>());
-
     }
 
     @Override
@@ -60,46 +56,32 @@ public class ObjectMappingRenderCallback
     @Override
     public void startRow(TableRenderContext context) {
         row = new TableRow();
+        row.setCells(new ArrayList<>());
     }
 
     @Override
     public void startCell(TableRenderContext context) {
-
         cell = new TableCell();
-//
-//        column = new DpmColumn();
-//        column.setColumnSpan(context.getColumnSpan());
-//        column.setRowSpan(context.getRowSpan());
-
-//        getRenderPropertyUtils();
-
         cell.setType(context.getCellType());
         cell.setColSpan(context.getColumnSpan());
         cell.setRowSpan(context.getRowSpan());
-//        cell.setPadding(context.getMember().getDepth());
     }
 
     @Override
     public void endCell(TableRenderContext context) {
-        if (row.getCells() == null) {
-            row.setCells(new ArrayList<>());
-        }
         row.getCells().add(cell);
         this.cell = null;
     }
 
     @Override
     public void endRow(TableRenderContext context) {
-
         if (header == null) {
             body.getRows().add(row);
         } else {
             header.getRows().add(row);
         }
-
         this.row = null;
     }
-
 
     @Override
     public void endTable(TableRenderContext context) {
@@ -107,20 +89,18 @@ public class ObjectMappingRenderCallback
     }
 
     @Override
-    public void renderCommands(TableRenderContext context, List<UICommand<?>> commands) {
-        List<Command> commandList = new ArrayList<>();
+    public void renderCommands(TableRenderContext context, List<UICommand<?>> uiCommands) {
+        List<Command> commands = new ArrayList<>();
 
-        for (UICommand<?> uiCommand : commands) {
+        for (UICommand<?> uiCommand : uiCommands) {
             Command command = new Command();
             command.setName(uiCommand.getName());
-            command.setDescription(uiCommand.getDescription());
             command.setMode(uiCommand.getMode(context));
             command.setParameters(uiCommand.createParameters(context));
 
-            commandList.add(command);
+            commands.add(command);
         }
-
-        cell.setCommands(commandList);
+        cell.setCommands(commands);
     }
 
     @Override

@@ -1,12 +1,10 @@
 package com.eltech.olap.demo.service;
 
 import com.eltech.olap.demo.domain.Command;
-import com.eltech.olap.demo.pivot.CustomPivotModel;
-
-import java.io.Serializable;
+import com.eltech.olap.demo.domain.QueryResult;
 
 public interface PivotModelService {
-    CustomPivotModel executeMdxQuery(Serializable bookmark, String mdxQuery);
+    QueryResult executeMdxQuery(String mdxQuery);
 
-    CustomPivotModel executeCommand(Serializable bookmark, Command command);
+    QueryResult executeCommand(String storedQuery, Command command);
 }

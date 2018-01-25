@@ -2,73 +2,62 @@ package com.eltech.olap.demo.service.impl;
 
 import com.eltech.olap.demo.callback.ObjectMappingRenderCallback;
 import com.eltech.olap.demo.domain.Command;
-import com.eltech.olap.demo.pivot.CustomPivotModel;
-import com.eltech.olap.demo.pivot.CustomPivotModelImpl;
+import com.eltech.olap.demo.domain.QueryResult;
 import com.eltech.olap.demo.service.PivotModelService;
+import org.pivot4j.PivotModel;
 import org.pivot4j.datasource.SimpleOlapDataSource;
+import org.pivot4j.impl.PivotModelImpl;
 import org.pivot4j.ui.command.UICommand;
 import org.pivot4j.ui.table.TableRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.Serializable;
-
 @Service
 public class PivotModelServiceImpl implements PivotModelService {
 
+    private final SimpleOlapDataSource simpleOlapDataSource;
+
     @Autowired
-    private SimpleOlapDataSource simpleOlapDataSource;
+    public PivotModelServiceImpl(SimpleOlapDataSource simpleOlapDataSource) {
+        this.simpleOlapDataSource = simpleOlapDataSource;
+    }
 
     @Override
-    public CustomPivotModel executeMdxQuery(Serializable bookmark, String mdxQuery) {
-        CustomPivotModel model = new CustomPivotModelImpl(simpleOlapDataSource);
-
-        if (bookmark != null) {
-            model.restoreState(bookmark);
-            model.setMdx(mdxQuery);
-            model.getCellSet();
-        } else {
-            model.setMdx(mdxQuery);
-            model.initialize();
-        }
+    public QueryResult executeMdxQuery(String mdxQuery) {
+        PivotModel model = createPivotModel(mdxQuery);
 
         ObjectMappingRenderCallback callback = new ObjectMappingRenderCallback();
+        createTableRenderer().render(model, callback);
 
-        TableRenderer renderer = new TableRenderer();
-        renderer.setShowDimensionTitle(false); // Optionally hide the dimension title headers.
-        renderer.setShowParentMembers(true); // Optionally make the parent members visible.
+        return new QueryResult(callback.getTable(), model.getCurrentMdx());
+    }
 
-        renderer.render(model, callback); // Render the result as a HTML page.
-        model.setTable(callback.getTable());
+    @Override
+    public QueryResult executeCommand(String storedQuery, Command command) {
+        PivotModel model = createPivotModel(storedQuery);
+        ObjectMappingRenderCallback callback = new ObjectMappingRenderCallback();
+        TableRenderer tableRenderer = createTableRenderer();
+
+        UICommand<?> uiCommand = tableRenderer.getCommand(command.getName());
+        uiCommand.execute(model, command.getParameters());
+        tableRenderer.render(model, callback);
+
+        return new QueryResult(callback.getTable(), model.getCurrentMdx());
+    }
+
+    private PivotModel createPivotModel(String mdxQuery){
+        PivotModel model = new PivotModelImpl(simpleOlapDataSource);
+        model.setMdx(mdxQuery);
+        model.initialize();
 
         return model;
     }
 
-
-    @Override
-    public CustomPivotModel executeCommand(Serializable bookmark, Command command) {
-
-        if (bookmark == null) {
-            throw new NullPointerException();
-        }
-        CustomPivotModel model = new CustomPivotModelImpl(simpleOlapDataSource);
-
-        model.restoreState(bookmark);
-
-        ObjectMappingRenderCallback callback = new ObjectMappingRenderCallback();
-
+    private TableRenderer createTableRenderer(){
         TableRenderer renderer = new TableRenderer();
-        renderer.setShowDimensionTitle(false); // Optionally hide the dimension title headers.
-        renderer.setShowParentMembers(true); // Optionally make the parent members visible.
+        renderer.setShowDimensionTitle(false);
+        renderer.setShowParentMembers(true);
 
-        UICommand<?> uiCommand = renderer.getCommand(command.getName());
-        uiCommand.execute(model, command.getParameters());
-
-        model.getCellSet();
-
-        renderer.render(model, callback); // Render the result as a HTML page.
-        model.setTable(callback.getTable());
-
-        return model;
+        return renderer;
     }
 }
