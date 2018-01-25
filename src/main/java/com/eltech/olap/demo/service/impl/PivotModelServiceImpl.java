@@ -1,10 +1,12 @@
 package com.eltech.olap.demo.service.impl;
 
 import com.eltech.olap.demo.callback.ObjectMappingRenderCallback;
+import com.eltech.olap.demo.domain.Command;
 import com.eltech.olap.demo.pivot.CustomPivotModel;
 import com.eltech.olap.demo.pivot.CustomPivotModelImpl;
 import com.eltech.olap.demo.service.PivotModelService;
 import org.pivot4j.datasource.SimpleOlapDataSource;
+import org.pivot4j.ui.command.UICommand;
 import org.pivot4j.ui.table.TableRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.io.Serializable;
 
 @Service
-public class PivotModelServiceImpl implements PivotModelService{
+public class PivotModelServiceImpl implements PivotModelService {
 
     @Autowired
     private SimpleOlapDataSource simpleOlapDataSource;
@@ -21,11 +23,11 @@ public class PivotModelServiceImpl implements PivotModelService{
     public CustomPivotModel executeMdxQuery(Serializable bookmark, String mdxQuery) {
         CustomPivotModel model = new CustomPivotModelImpl(simpleOlapDataSource);
 
-        if(bookmark != null){
+        if (bookmark != null) {
             model.restoreState(bookmark);
             model.setMdx(mdxQuery);
             model.getCellSet();
-        } else{
+        } else {
             model.setMdx(mdxQuery);
             model.initialize();
         }
@@ -43,5 +45,30 @@ public class PivotModelServiceImpl implements PivotModelService{
     }
 
 
+    @Override
+    public CustomPivotModel executeCommand(Serializable bookmark, Command command) {
 
+        if (bookmark == null) {
+            throw new NullPointerException();
+        }
+        CustomPivotModel model = new CustomPivotModelImpl(simpleOlapDataSource);
+
+        model.restoreState(bookmark);
+
+        ObjectMappingRenderCallback callback = new ObjectMappingRenderCallback();
+
+        TableRenderer renderer = new TableRenderer();
+        renderer.setShowDimensionTitle(false); // Optionally hide the dimension title headers.
+        renderer.setShowParentMembers(true); // Optionally make the parent members visible.
+
+        UICommand<?> uiCommand = renderer.getCommand(command.getName());
+        uiCommand.execute(model, command.getParameters());
+
+        model.getCellSet();
+
+        renderer.render(model, callback); // Render the result as a HTML page.
+        model.setTable(callback.getTable());
+
+        return model;
+    }
 }

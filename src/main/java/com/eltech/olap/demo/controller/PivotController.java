@@ -1,5 +1,6 @@
 package com.eltech.olap.demo.controller;
 
+import com.eltech.olap.demo.domain.Command;
 import com.eltech.olap.demo.domain.Table;
 import com.eltech.olap.demo.pivot.CustomPivotModel;
 import com.eltech.olap.demo.service.PivotModelService;
@@ -12,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -70,4 +68,16 @@ public class PivotController {
         writer.close();
     }
 
+    @RequestMapping(method = RequestMethod.POST, path = "/execute")
+    public ResponseEntity<Table> executeCommand(HttpServletRequest request,
+                                                @RequestBody Command command) {
+
+
+        Serializable bookmark = (Serializable) request.getSession().getAttribute(PIVOT_STATE_ATTRIBUTE_NAME);
+
+        CustomPivotModel customPivotModel = pivotModelService.executeCommand(bookmark, command);
+
+        request.getSession().setAttribute(PIVOT_STATE_ATTRIBUTE_NAME, customPivotModel.saveState());
+        return new ResponseEntity<>(customPivotModel.getTable(), HttpStatus.OK);
+    }
 }
