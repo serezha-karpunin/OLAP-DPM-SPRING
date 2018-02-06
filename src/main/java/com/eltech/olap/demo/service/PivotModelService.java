@@ -1,10 +1,16 @@
 package com.eltech.olap.demo.service;
 
-import com.eltech.olap.demo.domain.Command;
-import com.eltech.olap.demo.domain.QueryResult;
+import com.eltech.olap.demo.domain.meta.PivotMetadata;
+import org.pivot4j.PivotModel;
+import org.pivot4j.ui.command.UICommand;
+import org.pivot4j.ui.command.UICommandParameters;
 
 public interface PivotModelService {
-    QueryResult executeMdxQuery(String mdxQuery);
+    PivotModel createPivotModel(String mdxQuery);
 
-    QueryResult executeCommand(String storedQuery, Command command);
+    PivotModel executeMdxQuery(String mdxQuery);
+
+    PivotModel executeCommand(String storedQuery, UICommand<?> uiCommand, UICommandParameters commandParameters);
+
+    PivotMetadata getMetadata(PivotModel model);
 }
