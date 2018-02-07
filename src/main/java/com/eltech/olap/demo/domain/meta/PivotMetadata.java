@@ -4,8 +4,8 @@ import java.util.List;
 
 public class PivotMetadata {
     private List<HierarchyMetadata> possibleHierarchies;
-    private List<HierarchyMetadata> columnHierarchies;
-    private List<HierarchyMetadata> rowHierarchies;
+    private AxisMetadata columnAxis;
+    private AxisMetadata rowAxis;
 
     public List<HierarchyMetadata> getPossibleHierarchies() {
         return possibleHierarchies;
@@ -15,19 +15,19 @@ public class PivotMetadata {
         this.possibleHierarchies = possibleHierarchies;
     }
 
-    public List<HierarchyMetadata> getColumnHierarchies() {
-        return columnHierarchies;
+    public AxisMetadata getColumnAxis() {
+        return columnAxis;
     }
 
-    public void setColumnHierarchies(List<HierarchyMetadata> columnHierarchies) {
-        this.columnHierarchies = columnHierarchies;
+    public void setColumnAxis(AxisMetadata columnAxis) {
+        this.columnAxis = columnAxis;
     }
 
-    public List<HierarchyMetadata> getRowHierarchies() {
-        return rowHierarchies;
+    public AxisMetadata getRowAxis() {
+        return rowAxis;
     }
 
-    public void setRowHierarchies(List<HierarchyMetadata> rowHierarchies) {
-        this.rowHierarchies = rowHierarchies;
+    public void setRowAxis(AxisMetadata rowAxis) {
+        this.rowAxis = rowAxis;
     }
 }

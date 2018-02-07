@@ -1,8 +1,8 @@
 package com.eltech.olap.demo.service.impl;
 
+import com.eltech.olap.demo.domain.meta.AxisMetadata;
 import com.eltech.olap.demo.domain.meta.HierarchyMetadata;
 import com.eltech.olap.demo.domain.meta.PivotMetadata;
-import com.eltech.olap.demo.service.HierarchyService;
 import com.eltech.olap.demo.service.PivotModelService;
 import org.olap4j.Axis;
 import org.pivot4j.PivotModel;
@@ -22,9 +22,6 @@ import java.util.stream.Collectors;
 public class PivotModelServiceImpl implements PivotModelService {
 
     private final SimpleOlapDataSource simpleOlapDataSource;
-
-    @Autowired
-    private HierarchyService hierarchyService;
 
     @Autowired
     public PivotModelServiceImpl(SimpleOlapDataSource simpleOlapDataSource) {
@@ -65,7 +62,6 @@ public class PivotModelServiceImpl implements PivotModelService {
                 .map(HierarchyMetadata::getName)
                 .collect(Collectors.toList()));
 
-
         List<HierarchyMetadata> possibleHierarchies = model.getCube().getHierarchies()
                 .stream()
                 .filter(h -> !tempNames.contains(h.getName()))
@@ -73,8 +69,8 @@ public class PivotModelServiceImpl implements PivotModelService {
                 .collect(Collectors.toList());
 
         PivotMetadata pivotMetadata = new PivotMetadata();
-        pivotMetadata.setColumnHierarchies(columnHierarchies);
-        pivotMetadata.setRowHierarchies(rowHierarchies);
+        pivotMetadata.setRowAxis(new AxisMetadata(Axis.Standard.ROWS.name(), rowHierarchies));
+        pivotMetadata.setColumnAxis(new AxisMetadata(Axis.Standard.COLUMNS.name(), columnHierarchies));
         pivotMetadata.setPossibleHierarchies(possibleHierarchies);
         return pivotMetadata;
     }
@@ -86,6 +82,4 @@ public class PivotModelServiceImpl implements PivotModelService {
 
         return model;
     }
-
-
 }
