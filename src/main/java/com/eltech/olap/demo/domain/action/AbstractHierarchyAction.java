@@ -4,6 +4,9 @@ public abstract class AbstractHierarchyAction {
     private String targetAxisName;
     private String hierarchyName;
 
+    public AbstractHierarchyAction() {
+    }
+
     public AbstractHierarchyAction(String targetAxisName, String hierarchyName) {
         this.targetAxisName = targetAxisName;
         this.hierarchyName = hierarchyName;

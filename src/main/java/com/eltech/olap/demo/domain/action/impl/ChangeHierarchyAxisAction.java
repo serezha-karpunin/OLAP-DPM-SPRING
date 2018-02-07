@@ -6,6 +6,9 @@ public class ChangeHierarchyAxisAction extends AbstractHierarchyAction {
     private String sourceAxisName;
     private Integer position;
 
+    public ChangeHierarchyAxisAction() {
+    }
+
     public ChangeHierarchyAxisAction(String targetAxisName, String hierarchyName, String sourceAxisName, Integer position) {
         super(targetAxisName, hierarchyName);
         this.sourceAxisName = sourceAxisName;

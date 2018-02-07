@@ -5,8 +5,11 @@ import com.eltech.olap.demo.domain.action.AbstractHierarchyAction;
 public class MoveHierarchyAction extends AbstractHierarchyAction{
     private Integer position;
 
-    public MoveHierarchyAction(String axisName, String hierarchyName, Integer position) {
-        super(axisName, hierarchyName);
+    public MoveHierarchyAction() {
+    }
+
+    public MoveHierarchyAction(String targetAxisName, String hierarchyName, Integer position) {
+        super(targetAxisName, hierarchyName);
         this.position = position;
     }
 
