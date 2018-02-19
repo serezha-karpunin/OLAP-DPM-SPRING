@@ -11,6 +11,7 @@ import com.eltech.olap.demo.facade.PivotFacade;
 import com.eltech.olap.demo.service.HierarchyService;
 import com.eltech.olap.demo.service.PivotModelService;
 import org.pivot4j.PivotModel;
+import org.pivot4j.transform.NonEmpty;
 import org.pivot4j.ui.command.UICommand;
 import org.pivot4j.ui.table.TableRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +77,8 @@ public class PivotFacadeImpl implements PivotFacade {
     }
 
     private PivotTableState getPivotTableState(PivotModel model, Boolean showDimensionTitle, Boolean showParentMembers) {
+        model.getTransform(NonEmpty.class).setNonEmpty(true);
+
         ObjectMappingRenderCallback callback = new ObjectMappingRenderCallback();
         getTableRenderer(showDimensionTitle, showParentMembers).render(model, callback);
 

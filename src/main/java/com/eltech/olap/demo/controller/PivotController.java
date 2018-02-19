@@ -10,14 +10,14 @@ import com.eltech.olap.demo.facade.PivotFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 @CrossOrigin("*")
-@RestController
+@Controller
 public class PivotController {
-
     private final String CURRENT_QUERY_ATTRIBUTE_NAME = "currentQuery";
 
     private final PivotFacade pivotFacade;
