@@ -1,25 +1,49 @@
 <?xml version="1.0"?>
 <Schema name="Diploma">
     <Cube name="Diplomas">
-        <Table name="diploma_facts"/>
-        <Dimension name="Students" foreignKey="id_student">
+        <Table name="diploma_fact"/>
+        <Dimension name="Students" foreignKey="student_id">
             <Hierarchy hasAll="true" allMemberName="All" primaryKey="id_student">
-                <Table name="students"/>
+                <Table name="student_dim"/>
                 <Level name="Faculty" column="faculty" uniqueMembers="false"/>
-                <Level name="Specialization" column="specialization" uniqueMembers="false"/>
+                <Level name="Specialization" column="speciality" uniqueMembers="false"/>
                 <Level name="Group" column="group_number" uniqueMembers="false"/>
-                <Level name="Name" column="name" uniqueMembers="true"/>
+                <Level name="Name" column="full_name" uniqueMembers="true"/>
             </Hierarchy>
         </Dimension>
-        <Dimension name="Teachers" foreignKey="id_teacher">
-            <Hierarchy hasAll="true" allMemberName="All" primaryKey="id_teacher">
-                <Table name="teachers"/>
-                <Level name="Specialization" column="specialization" uniqueMembers="true"/>
-                <Level name="Name" column="name" uniqueMembers="true"/>
+        <Dimension name="Additional section consultant" foreignKey="additional_section_consultant_id">
+            <Hierarchy hasAll="true" allMemberName="All" primaryKey="id_consultant">
+                <Table name="additional_section_consultant_dim"/>
+                <Level name="Department" column="department" uniqueMembers="false"/>
+                <Level name="Name" column="full_name" uniqueMembers="true"/>
             </Hierarchy>
         </Dimension>
-        <Measure name="Mark" column="mark" aggregator="avg"/>
-        <Measure name="Percentage" column="percentage" aggregator="avg"/>
+        <Dimension name="Company consultant" foreignKey="company_consultant_id">
+            <Hierarchy hasAll="true" allMemberName="All" primaryKey="id_consultant">
+                <Table name="company_consultant_dim"/>
+                <Level name="Place of work" column="place_of_work" uniqueMembers="false"/>
+                <Level name="Name" column="full_name" uniqueMembers="true"/>
+            </Hierarchy>
+        </Dimension>
+        <Dimension name="Reviewer" foreignKey="reviewer_id">
+            <Hierarchy hasAll="true" allMemberName="All" primaryKey="id_reviewer">
+                <Table name="reviewer_dim"/>
+                <Level name="Place of work" column="place_of_work" uniqueMembers="false"/>
+                <Level name="Name" column="full_name" uniqueMembers="true"/>
+            </Hierarchy>
+        </Dimension>
+        <Dimension name="Time" type="TimeDimension" foreignKey="time_id">
+            <Hierarchy hasAll="true" allMemberName="All" primaryKey="id_time">
+                <Table name="time_by_day_dim"/>
+                <Level name="Year" column="year" uniqueMembers="false" levelType="TimeYears"/>
+                <Level name="Month" column="month" uniqueMembers="false" levelType="TimeMonths"/>
+            </Hierarchy>
+        </Dimension>
+        <Measure name="Scientific advisor mark" column="scientific_advisor_mark" aggregator="avg"/>
+        <Measure name="Reviewer mark" column="reviwer_mark" aggregator="avg"/>
+        <Measure name="Committee mark" column="committee_mark" aggregator="avg"/>
+        <Measure name="Company consultant mark" column="company_consultant_mark" aggregator="avg"/>
+        <Measure name="Originality persentage" column="originality_persentage" aggregator="avg"/>
     </Cube>
 </Schema>
 

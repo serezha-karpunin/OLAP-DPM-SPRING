@@ -24,7 +24,7 @@ public class DBConfiguration {
     @Bean
     public SimpleOlapDataSource simpleOlapDataSource(){
         SimpleOlapDataSource dataSource = new SimpleOlapDataSource();
-        dataSource.setConnectionString("jdbc:mondrian:Jdbc=jdbc:mysql://localhost/mdp?user=root&password=root;Catalog='file://C:/Users/Admin/Desktop/diploma/dpm/src/main/resources/Diploma.xml';");
+        dataSource.setConnectionString("jdbc:mondrian:Jdbc=jdbc:mysql://localhost/mdp?user=root&password=root;Catalog='file://C:/Users/Admin/Desktop/olap-dpm/src/main/resources/Diploma.xml';");
         return dataSource;
     }
 
