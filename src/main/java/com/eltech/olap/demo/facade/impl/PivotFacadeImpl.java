@@ -3,10 +3,6 @@ package com.eltech.olap.demo.facade.impl;
 import com.eltech.olap.demo.callback.ObjectMappingRenderCallback;
 import com.eltech.olap.demo.domain.Command;
 import com.eltech.olap.demo.domain.PivotTableState;
-import com.eltech.olap.demo.domain.action.impl.AddHierarchyAction;
-import com.eltech.olap.demo.domain.action.impl.ChangeHierarchyAxisAction;
-import com.eltech.olap.demo.domain.action.impl.MoveHierarchyAction;
-import com.eltech.olap.demo.domain.action.impl.RemoveHierarchyAction;
 import com.eltech.olap.demo.facade.PivotFacade;
 import com.eltech.olap.demo.service.HierarchyService;
 import com.eltech.olap.demo.service.PivotModelService;
@@ -45,36 +41,29 @@ public class PivotFacadeImpl implements PivotFacade {
     }
 
     @Override
-    public PivotTableState addHierarchy(String mdxQuery, AddHierarchyAction action, Boolean showDimensionTitle, Boolean showParentMembers) {
+    public PivotTableState addHierarchy(String mdxQuery, String hierarchyName, Boolean showDimensionTitle, Boolean showParentMembers) {
         PivotModel model = pivotModelService.createPivotModel(mdxQuery);
-        hierarchyService.addHierarchy(model, action);
+        hierarchyService.addHierarchy(model, hierarchyName);
 
         return getPivotTableState(model, showDimensionTitle, showParentMembers);
     }
 
     @Override
-    public PivotTableState moveHierarchy(String mdxQuery, MoveHierarchyAction action, Boolean showDimensionTitle, Boolean showParentMembers) {
+    public PivotTableState moveHierarchy(String mdxQuery, String hierarchyName, Integer position, Boolean showDimensionTitle, Boolean showParentMembers) {
         PivotModel model = pivotModelService.createPivotModel(mdxQuery);
-        hierarchyService.moveHierarchy(model, action);
+        hierarchyService.moveHierarchy(model, hierarchyName, position);
 
         return getPivotTableState(model, showDimensionTitle, showParentMembers);
     }
 
     @Override
-    public PivotTableState removeHierarchy(String mdxQuery, RemoveHierarchyAction action, Boolean showDimensionTitle, Boolean showParentMembers) {
+    public PivotTableState removeHierarchy(String mdxQuery, String hierarchyName, Boolean showDimensionTitle, Boolean showParentMembers) {
         PivotModel model = pivotModelService.createPivotModel(mdxQuery);
-        hierarchyService.removeHierarchy(model, action);
+        hierarchyService.removeHierarchy(model, hierarchyName);
 
         return getPivotTableState(model, showDimensionTitle, showParentMembers);
     }
 
-    @Override
-    public PivotTableState changeHierarchyAxis(String mdxQuery, ChangeHierarchyAxisAction action, Boolean showDimensionTitle, Boolean showParentMembers) {
-        PivotModel model = pivotModelService.createPivotModel(mdxQuery);
-        hierarchyService.changeHierarchyAxis(model, action);
-
-        return getPivotTableState(model, showDimensionTitle, showParentMembers);
-    }
 
     private PivotTableState getPivotTableState(PivotModel model, Boolean showDimensionTitle, Boolean showParentMembers) {
         model.getTransform(NonEmpty.class).setNonEmpty(true);
@@ -92,6 +81,4 @@ public class PivotFacadeImpl implements PivotFacade {
 
         return renderer;
     }
-
-
 }

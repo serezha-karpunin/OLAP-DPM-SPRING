@@ -2,10 +2,6 @@ package com.eltech.olap.demo.controller;
 
 import com.eltech.olap.demo.domain.Command;
 import com.eltech.olap.demo.domain.PivotTableState;
-import com.eltech.olap.demo.domain.action.impl.AddHierarchyAction;
-import com.eltech.olap.demo.domain.action.impl.ChangeHierarchyAxisAction;
-import com.eltech.olap.demo.domain.action.impl.MoveHierarchyAction;
-import com.eltech.olap.demo.domain.action.impl.RemoveHierarchyAction;
 import com.eltech.olap.demo.facade.PivotFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,48 +45,39 @@ public class PivotController {
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/hierarchy/add")
-    public ResponseEntity<PivotTableState> addHierarchyAxis(@RequestBody AddHierarchyAction action,
-                                                            Boolean showDimensionTitle,
-                                                            Boolean showParentMembers,
-                                                            HttpServletRequest request) {
+    public ResponseEntity<PivotTableState> addHierarchy(String hierarchyName,
+                                                        Boolean showDimensionTitle,
+                                                        Boolean showParentMembers,
+                                                        HttpServletRequest request) {
         PivotTableState pivotTableState =
-                pivotFacade.addHierarchy(restoreQuery(request), action, showDimensionTitle, showParentMembers);
+                pivotFacade.addHierarchy(restoreQuery(request), hierarchyName, showDimensionTitle, showParentMembers);
         storeQuery(request, pivotTableState.getQuery());
         return new ResponseEntity<>(pivotTableState, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/hierarchy/remove")
-    public ResponseEntity<PivotTableState> removeHierarchyAxis(@RequestBody RemoveHierarchyAction action,
-                                                               Boolean showDimensionTitle,
-                                                               Boolean showParentMembers,
-                                                               HttpServletRequest request) {
+    public ResponseEntity<PivotTableState> removeHierarchy(String hierarchyName,
+                                                           Boolean showDimensionTitle,
+                                                           Boolean showParentMembers,
+                                                           HttpServletRequest request) {
         PivotTableState pivotTableState =
-                pivotFacade.removeHierarchy(restoreQuery(request), action, showDimensionTitle, showParentMembers);
+                pivotFacade.removeHierarchy(restoreQuery(request), hierarchyName, showDimensionTitle, showParentMembers);
         storeQuery(request, pivotTableState.getQuery());
         return new ResponseEntity<>(pivotTableState, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/hierarchy/move")
-    public ResponseEntity<PivotTableState> moveHierarchyAxis(@RequestBody MoveHierarchyAction action,
+    public ResponseEntity<PivotTableState> moveHierarchyAxis(String hierarchyName,
+                                                             Integer position,
                                                              Boolean showDimensionTitle,
                                                              Boolean showParentMembers,
                                                              HttpServletRequest request) {
         PivotTableState pivotTableState =
-                pivotFacade.moveHierarchy(restoreQuery(request), action, showDimensionTitle, showParentMembers);
+                pivotFacade.moveHierarchy(restoreQuery(request), hierarchyName, position, showDimensionTitle, showParentMembers);
         storeQuery(request, pivotTableState.getQuery());
         return new ResponseEntity<>(pivotTableState, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/hierarchy/change")
-    public ResponseEntity<PivotTableState> changeHierarchyAxis(@RequestBody ChangeHierarchyAxisAction action,
-                                                               Boolean showDimensionTitle,
-                                                               Boolean showParentMembers,
-                                                               HttpServletRequest request) {
-        PivotTableState pivotTableState =
-                pivotFacade.changeHierarchyAxis(restoreQuery(request), action, showDimensionTitle, showParentMembers);
-        storeQuery(request, pivotTableState.getQuery());
-        return new ResponseEntity<>(pivotTableState, HttpStatus.OK);
-    }
 
     private String restoreQuery(HttpServletRequest request) {
         return (String) request.getSession().getAttribute(CURRENT_QUERY_ATTRIBUTE_NAME);

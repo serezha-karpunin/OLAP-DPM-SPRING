@@ -46,7 +46,6 @@ public class PivotModelServiceImpl implements PivotModelService {
                 .stream()
                 .map(h -> new HierarchyMetadata(h.getName()))
                 .collect(Collectors.toList());
-
         List<HierarchyMetadata> rowHierarchies = transform.findVisibleHierarchies(Axis.ROWS)
                 .stream()
                 .map(h -> new HierarchyMetadata(h.getName()))
